@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard: Moda & Estilo - Boom E-commerce</title>
+    <!-- Chart.js y Plugin Datalabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-green: #10b981;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 30px; }
+        
+        .header { text-align: center; margin-bottom: 30px; padding: 30px; background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; border: 1px solid #334155; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .header h1 { font-size: 2.8rem; color: #fff; margin-bottom: 10px; }
+        .header span { color: var(--accent); }
+        .header p { color: var(--text-muted); font-size: 1.2rem; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+        }
+        .card h3 { margin-bottom: 15px; color: #fff; font-weight: 600; font-size: 1.4rem; border-bottom: 1px solid #334155; padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
+        
+        /* Layout interno de la tarjeta */
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .chart-container { position: relative; height: 300px; width: 100%; margin-bottom: 20px;}
+        .chart-container.large { height: 400px; }
+
+        /* Contexto para exposición */
+        .context-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--accent);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: auto;
+        }
+        .context-box h4 { color: var(--accent); margin-bottom: 8px; font-size: 1.1rem; }
+        .context-box ul { padding-left: 20px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.5; }
+        .context-box li { margin-bottom: 6px; }
+        .context-box strong { color: #fff; }
+
+        .final-decision {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 15px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            margin-top: 30px;
+        }
+        
+        .final-decision h2 { font-size: 3.5rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+        .final-decision p { font-size: 1.4rem; max-width: 900px; margin: 0 auto; line-height: 1.6; color: #ecfdf5;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Dashboard E-commerce: <span>Moda & Estilo</span></h1>
+        <p>Presentación Ejecutiva Interactiva - Puntos Clave para Exposición</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Parte 1: Crecimiento -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <h3>📈 1. Evolución Histórica de Búsquedas (Últimos 5 años)</h3>
+            <div class="card-content">
+                <div class="chart-container large">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="context-box">
+                    <h4>🎙️ Resumen para exposición:</h4>
+                    <ul>
+                        <li><strong>El punto de inflexión fue marzo 2020:</strong> Observamos un crecimiento superior al 300% debido a los confinamientos.</li>
+                        <li><strong>Consolidación del hábito:</strong> Tras la pandemia, el volumen de búsqueda no volvió a caer a niveles de 2019; el colombiano rompió la barrera de desconfianza al pagar online.</li>
+                        <li><strong>Hito actual:</strong> Los picos máximos históricos ahora se concentran formalmente en noviembre (Black Friday), marcando el inicio anticipado de la temporada navideña.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 2: Competidores -->
+        <div class="card">
+            <h3>🥊 2. Análisis Competitivo (Share of Search)</h3>
+            <div class="card-content">
+                <div class="chart-container">
+                    <canvas id="competitorsChart"></canvas>
+                </div>
+                <div class="context-box">
+                    <h4>🎙️ Resumen para exposición:</h4>
+                    <ul>
+                        <li><strong>MercadoLibre (34%)</strong> domina el volumen general, seguido por <strong>Falabella (26%)</strong>, que es el líder indiscutible en moda y retail.</li>
+                        <li><strong>Nuestra Ventaja Oculta:</strong> Falabella y Éxito crecen principalmente por publicidad en eventos masivos. Moda & Estilo tiene la oportunidad de capturar una demanda orgánica recurrente al especializarse en un solo nicho.</li>
+                        <li><strong>Propuesta de Valor:</strong> No vamos a competir con Amazon; nos posicionaremos mediante políticas amigables de cambios de ropa presenciales, algo que ellos no pueden igualar.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 3: Estacionalidad -->
+        <div class="card">
+            <h3>📅 3. Estacionalidad del Consumidor</h3>
+            <div class="card-content">
+                <div class="chart-container">
+                    <canvas id="seasonalityChart"></canvas>
+                </div>
+                <div class="context-box">
+                    <h4>🎙️ Resumen para exposición:</h4>
+                    <ul>
+                        <li><strong>Momentos Críticos:</strong> Noviembre (100%) y Diciembre (90%) representan la época dorada de conversión. Las pautas son caras, pero altamente efectivas.</li>
+                        <li><strong>Temporada de Valles:</strong> Enero y Febrero son de bajo tráfico. Aquí sugerimos ejecutar estrategias de liquidación de colecciones para mover inventario.</li>
+                        <li><strong>Efecto "Día sin IVA":</strong> El consumidor moderno quedó educado para buscar ofertas agresivas; es muy sensible a descuentos temporales (ej. Promociones "Solo por Hoy").</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 4: Geografía -->
+        <div class="card">
+            <h3>🗺️ 4. Interés por Ciudades Principales</h3>
+            <div class="card-content">
+                <div class="chart-container">
+                    <canvas id="geoChart"></canvas>
+                </div>
+                <div class="context-box">
+                    <h4>🎙️ Resumen para exposición:</h4>
+                    <ul>
+                        <li><strong>Dominio Central:</strong> Bogotá concentra casi la mitad de las búsquedas (45%), lo que justifica invertir fuertemente en logística "Same-Day" (Entrega el mismo día).</li>
+                        <li><strong>Zonas Estratégicas:</strong> Medellín y Cali suman un valioso 35%. Es clave porque <strong>ahí ya tenemos tiendas físicas</strong>.</li>
+                        <li><strong>Estrategia Ganadora:</strong> Impulsar obligatoriamente el modelo <em>"Click & Collect"</em> en estas 3 ciudades (Comprar online, retirar en tienda). Ahorra costos de envío y genera ventas cruzadas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parte 5: Categorías -->
+        <div class="card">
+            <h3>🛍️ 5. Volumen por Categorías (Moda)</h3>
+            <div class="card-content">
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="context-box">
+                    <h4>🎙️ Resumen para exposición:</h4>
+                    <ul>
+                        <li><strong>El Motor de Ventas:</strong> La "Ropa de Mujer" y "Comprar Zapatos" acaparan el 73% del interés general. Será la "carnada" principal de nuestro embudo de marketing.</li>
+                        <li><strong>Segmento Secundario:</strong> La "Ropa de Hombre" requiere menos inventario inicial, pero la lealtad de compra online del hombre suele ser mayor a largo plazo.</li>
+                        <li><strong>Océano Azul:</strong> La "Moda Sostenible" (4%) es una tendencia joven pero de crecimiento firme; es nuestra mejor vía para diferenciarnos como marca responsable en el futuro.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decisión Final -->
+    <div class="final-decision">
+        <h2>✅ DECISIÓN: SÍ AL E-COMMERCE</h2>
+        <p><strong>El mercado está absolutamente consolidado.</strong> Es el momento ideal para capitalizar nuestras 15 tiendas físicas mediante una estrategia <em>omnicanal (Click & Collect)</em>.<br><br>No competiremos en precio puro con gigantes como MercadoLibre. Nuestra estrategia será posicionarnos como el nicho experto en moda local, garantizando la mayor <strong>confianza, cercanía y facilidad de devolución</strong> de Colombia.</p>
+    </div>
+
+    <script>
+        // Registrar Plugin Datalabels globalmente
+        Chart.register(ChartDataLabels);
+
+        // Configuración global de Chart.js para tema oscuro
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+        Chart.defaults.plugins.tooltip.padding = 10;
+        
+        // Desactivar datalabels por defecto para no saturar todos
+        Chart.defaults.plugins.datalabels.display = false;
+
+        // 1. Gráfico de Evolución (Líneas)
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: ['2019', 'Mar 2020', 'Nov 2020', '2021', '2022', '2023', '2024 Actual'],
+                datasets: [{
+                    label: 'Volumen Búsqueda: E-commerce General',
+                    data: [25, 100, 95, 85, 75, 82, 88],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#3b82f6',
+                    pointRadius: 6
+                },
+                {
+                    label: 'Volumen Búsqueda: Moda y Ropa',
+                    data: [15, 80, 90, 70, 65, 72, 80],
+                    borderColor: '#ec4899',
+                    borderWidth: 4,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ec4899',
+                    pointRadius: 6
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { position: 'top', labels: { font: { size: 14 } } },
+                    datalabels: {
+                        display: true,
+                        align: 'top',
+                        color: '#cbd5e1',
+                        font: { weight: 'bold', size: 12 },
+                        formatter: function(value) { return value + "%"; }
+                    }
+                }, 
+                scales: { y: { beginAtZero: true, max: 110 } } 
+            }
+        });
+
+        // 2. Gráfico Competidores (Barras horizontales)
+        new Chart(document.getElementById('competitorsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['MercadoLibre', 'Falabella online', 'Éxito online', 'Amazon Colombia', 'Linio'],
+                datasets: [{
+                    data: [34, 26, 21, 15, 4],
+                    backgroundColor: ['#fde047', '#10b981', '#fbbf24', '#f97316', '#ef4444'],
+                    borderRadius: 6
+                }]
+            },
+            options: { 
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { display: false },
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        anchor: 'end',
+                        align: 'end',
+                        font: { weight: 'bold', size: 14 },
+                        formatter: function(value) { return value + "%"; }
+                    }
+                }, 
+                scales: { x: { beginAtZero: true, max: 40 } } 
+            }
+        });
+
+        // 3. Gráfico Estacionalidad (Barras)
+        new Chart(document.getElementById('seasonalityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ene/Feb', 'Mayo (Madres)', 'Jun (Primas)', 'Sep (Amor)', 'Nov (Black F.)', 'Dic (Navidad)'],
+                datasets: [{
+                    data: [30, 65, 75, 50, 100, 90],
+                    backgroundColor: '#8b5cf6',
+                    borderRadius: 8
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { display: false },
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        anchor: 'end',
+                        align: 'bottom',
+                        font: { weight: 'bold', size: 14 },
+                        formatter: function(value) { return value + "%"; }
+                    }
+                }, 
+                scales: { y: { beginAtZero: true, max: 110 } } 
+            }
+        });
+
+        // 4. Gráfico Geografía (Doughnut)
+        new Chart(document.getElementById('geoChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Resto del país'],
+                datasets: [{
+                    data: [45, 20, 15, 10, 10],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#64748b'],
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                cutout: '60%', 
+                plugins: { 
+                    legend: { position: 'right' },
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        font: { weight: 'bold', size: 16 },
+                        formatter: function(value) { return value + "%"; }
+                    }
+                } 
+            }
+        });
+
+        // 5. Gráfico Categorías (Pie)
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Ropa Mujer', 'Zapatos', 'Ropa Hombre', 'Accesorios', 'Sostenible'],
+                datasets: [{
+                    data: [48, 25, 15, 8, 4],
+                    backgroundColor: ['#ec4899', '#3b82f6', '#6366f1', '#f59e0b', '#10b981'],
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { position: 'right' },
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        font: { weight: 'bold', size: 14 },
+                        formatter: function(value, context) {
+                            if(value < 5) return ""; // Ocultar etiquetas muy pequeñas
+                            return value + "%"; 
+                        }
+                    }
+                } 
+            }
+        });
+    </script>
+</body>
+</html>
